@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-gold: var(--gold);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-overlay: var(--overlay);
+}
+
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface-2: #f3eee6;
+  --line: #e4dccf;
+  --ink: #1f1a24;
+  --muted: #5d5566;
+  --brand: #6b2d5c;
+  --brand-strong: #4e1f43;
+  --brand-soft: #f3e6ef;
+  --on-brand: #ffffff;
+  --gold: #8a6a1f;
+  --ok: #17663a;
+  --ok-soft: #dff3e6;
+  --warn: #8a5300;
+  --warn-soft: #fdeccb;
+  --bad: #a52626;
+  --bad-soft: #fbe0e0;
+  --overlay: rgb(20 12 24 / 0.55);
+  --z-header: 30;
+  --z-overlay: 40;
+  --z-drawer: 50;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--brand);
+  color: var(--on-brand);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+    text-align: center;
+  }
+  .btn-primary {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .btn-primary:hover {
+    background: var(--brand-strong);
+  }
+  .btn-outline {
+    background: var(--surface);
+    color: var(--brand);
+    border-color: var(--brand);
+  }
+  .btn-outline:hover {
+    background: var(--brand-soft);
+  }
+  .btn-danger {
+    background: var(--surface);
+    color: var(--bad);
+    border-color: var(--bad);
+  }
+  .btn-danger:hover {
+    background: var(--bad-soft);
+  }
+  .btn-sm {
+    min-height: 2.25rem;
+    padding-inline: 0.85rem;
+    font-size: 0.875rem;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .field {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--bad);
+  }
+  .label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+  .badge-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+  .badge-bad {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+  .badge-muted {
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+  .error-text {
+    color: var(--bad);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+  .table-wrap {
+    overflow-x: auto;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 32rem;
+  }
+  .data-table th {
+    text-align: start;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .data-table td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

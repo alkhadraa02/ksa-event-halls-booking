@@ -1,5 +1,3 @@
-import { randomBytes } from "node:crypto";
-
 export type DayState = "available" | "held" | "booked" | "blocked" | "past";
 export type DayMarker = "booked" | "held" | "blocked";
 
@@ -81,7 +79,7 @@ export function isRequestable(state: DayState): boolean {
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 export function generateRef(): string {
-  const bytes = randomBytes(8);
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(8));
   let out = "";
   for (let i = 0; i < 8; i++) out += ALPHABET[bytes[i] % ALPHABET.length];
   return `EV-${out}`;
