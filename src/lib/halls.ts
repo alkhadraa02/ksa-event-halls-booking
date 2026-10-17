@@ -15,9 +15,17 @@ export async function searchHalls(search: HallSearch) {
   );
 }
 
+function decodeSlug(slug: string) {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+}
+
 export async function getPublicHall(slug: string) {
   const hall = await db.hall.findUnique({
-    where: { slug },
+    where: { slug: decodeSlug(slug) },
     include: {
       vendor: true,
       packages: { where: { active: true }, orderBy: [{ category: "asc" }, { price: "asc" }] },
