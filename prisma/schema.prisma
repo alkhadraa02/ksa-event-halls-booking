@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// role: ADMIN | VENDOR
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  phone        String?
+  passwordHash String
+  role         String    @default("VENDOR")
+  createdAt    DateTime  @default(now())
+  vendor       Vendor?
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// status: PENDING | APPROVED | REJECTED
+model Vendor {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  businessName String
+  city         String
+  phone        String
+  description  String   @default("")
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  halls        Hall[]
+}
+
+// section: BOTH | MEN | WOMEN
+model Hall {
+  id              String        @id @default(cuid())
+  vendorId        String
+  name            String
+  slug            String        @unique
+  city            String
+  district        String        @default("")
+  description     String        @default("")
+  section         String        @default("BOTH")
+  capacityMen     Int           @default(0)
+  capacityWomen   Int           @default(0)
+  basePrice       Int
+  depositPercent  Int           @default(20)
+  amenities       String        @default("")
+  published       Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  vendor          Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  packages        Package[]
+  bookings        Booking[]
+  blockedDates    BlockedDate[]
+
+  @@index([city])
+  @@index([vendorId])
+}
+
+// category: CATERING | DECORATION | PHOTOGRAPHY | OTHER
+model Package {
+  id          String           @id @default(cuid())
+  hallId      String
+  name        String
+  category    String           @default("OTHER")
+  description String           @default("")
+  price       Int
+  active      Boolean          @default(true)
+  hall        Hall             @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  items       BookingPackage[]
+
+  @@index([hallId])
+}
+
+// date is a calendar day key: YYYY-MM-DD
+model BlockedDate {
+  id     String @id @default(cuid())
+  hallId String
+  date   String
+  reason String @default("")
+  hall   Hall   @relation(fields: [hallId], references: [id], onDelete: Cascade)
+
+  @@unique([hallId, date])
+}
+
+// status: PENDING | APPROVED | DECLINED
+model Booking {
+  id            String           @id @default(cuid())
+  ref           String           @unique
+  hallId        String
+  date          String
+  eventType     String
+  section       String           @default("BOTH")
+  guests        Int
+  customerName  String
+  customerPhone String
+  customerEmail String           @default("")
+  notes         String           @default("")
+  status        String           @default("PENDING")
+  hallPrice     Int
+  addonsTotal   Int              @default(0)
+  totalAmount   Int
+  depositAmount Int
+  createdAt     DateTime         @default(now())
+  decidedAt     DateTime?
+  hall          Hall             @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  packages      BookingPackage[]
+
+  @@index([hallId, date])
+  @@index([customerPhone])
+}
+
+model BookingPackage {
+  id        String  @id @default(cuid())
+  bookingId String
+  packageId String?
+  name      String
+  price     Int
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  package   Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+}
